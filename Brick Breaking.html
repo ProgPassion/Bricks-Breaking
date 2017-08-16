@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Brick Breaking Ver 1.0</title>
+	<style type="text/css">
+		*{
+			 margin: 0;
+		    padding: 0;
+		}
+		#background{
+			background-color: #765;
+				       width: 1100px;
+					  height: 450px;
+					  margin: 0px auto 30px auto;
+		}
+		#racket{
+			background-color: #6699CC;
+					   width: 130px;
+					  height: 16px;
+					position: absolute;
+						 top: 514px;
+						left: calc((100% / 2) - 65px);
+			   border-radius: 35%;
+		}
+		#ball{
+			background-color: yellow;
+				       width: 15px;
+					  height: 15px;
+					position: absolute;
+						 top: 499px;
+						left: calc((100% / 2) - 7.5px);
+			   border-radius: 50%;
+		}
+		.bricks{
+					position: absolute;
+					   width: 78px;
+					  height: 33px;
+			background-color: red;
+					  border: 1px solid brown;
+		}
+		.panel{
+					   width: 1160px;
+					  height: 28px;
+					 padding: 10px 10px;
+					  margin: 30px auto 0px auto;
+					  border: 1px solid white;
+			   border-radius: 20px;
+			background-color: #C76E32;
+		}
+		.pnt-part{
+				 float: left;
+			margin-top: 5px;
+		}
+		.lif-part{
+			 	   float: right;
+			  margin-top: 5px;
+			margin-right: 20px;
+		}
+		.input{
+				width: 1100px;
+			   margin: 10px auto;
+			font-size: 20px;
+		}
+	</style>
+</head>
+<body>
+	<div class="panel">
+		<div class="pnt-part">Point: <span id="point">0</span></div>
+		<div class="lif-part">Life:  <span id="life">2</span></div>
+	</div>
+	<div id="background">
+		<div id="ball"></div>
+		<div id="racket"></div>
+	</div>
+	<div class="input">
+		<span>Type: [Left Arrow Key] for moving left, [Right Arrow Key] for moving right, [Space] for lanching the ball</span>	
+	</div>
+</body>
+
+<!--Brick Breaking Version 1.0
+	Created By Imran Mlloja
+	Data 15.08.2017 -->
+
+<script type="text/javascript">
+
+	var browserWidth = window.innerWidth;
+	
+	//Racket Default Values
+	var racketSize        = 130;
+	var racketHeight      = 16;
+	var defaultRacketPoss = (browserWidth / 2) - (racketSize / 2);
+	var racketTopWall     = 499;
+	var racketLeftWall    = defaultRacketPoss;
+	var racketRightWall   = defaultRacketPoss + racketSize;
+
+	//Ball Default Values
+	var ballSize 		      = 15;
+	var defaultBallPossTop    = 499;
+	var defaultBallPossLeft   = (browserWidth / 2) - (ballSize / 2);
+	var defaultBallPossBottom = defaultBallPossTop  + ballSize;
+	var defaultBallPossRight  = defaultBallPossLeft + ballSize;
+	
+	//Walls Field Values
+	var leftWall    = (browserWidth - 1100) / 2;
+	var topWall     = 80;
+	var rightWall   = leftWall + 1100;
+	var bottomWall  = racketTopWall + racketHeight;
+		
+	//Ball Movement Default Values
+	var verMovement = -1;
+	var horMovement =  1;
+
+	//Brick Array with values for every brick
+	var bricksCoordinate = new Array();
+
+	//Life And Points Variables
+	var life   = 2;
+	var points = 0;
+
+	var gameStart = false;
+	
+	bricksBuild();
+	window.document.onkeydown = input;
+	
+	function bricksBuild(){
+
+		var value = document.getElementById("background").innerHTML;
+		
+		console.log(value);
+		var brickWidth = 80;
+		var brickHeight = 35;
+
+		idIndex = 1;
+		
+		for(i=0; i<10; i++){
+			for(j=0; j<6; j++){
+
+				value += "<div class='bricks' id='brick" + idIndex + "'></div>";
+				leftPossBrick = ((browserWidth - 1100) / 2) + 150 + 80 * i;
+				topPossBrick  = 130 + 35 * j;
+				bricksCoordinate[idIndex - 1] = [idIndex, leftPossBrick, topPossBrick, true];  
+				idIndex++;
+			}
+		}
+
+		document.getElementById("background").innerHTML = value;
+		for(i=0; i<bricksCoordinate.length; i++){
+
+			id       = bricksCoordinate[i][0];
+			leftPoss = bricksCoordinate[i][1];
+			topPoss  = bricksCoordinate[i][2];
+			document.getElementById("brick" + id).style.left = leftPoss + "px";
+			document.getElementById("brick" + id).style.top  = topPoss  + "px";  			
+		}
+	}
+
+	function input(letter){
+
+		if(letter.keyCode == '37'){
+
+			if(defaultRacketPoss - 40 <= leftWall){
+
+				defaultRacketPoss = leftWall;
+
+				if(!gameStart){
+					defaultBallPossLeft   = defaultRacketPoss + (racketSize / 2) - (ballSize / 2);
+					defaultBallPossRight  = defaultRacketPoss + (racketSize / 2) + (ballSize / 2);
+				}
+			}
+			else{
+
+				defaultRacketPoss -= 40;
+
+				if(!gameStart){
+					defaultBallPossLeft  -= 40;
+					defaultBallPossRight -= 40;
+				}
+			}
+
+			updateRacketPosition();
+			document.getElementById("racket").style.left = defaultRacketPoss   + "px";
+			document.getElementById("ball").style.left   = defaultBallPossLeft + "px";
+		}
+		else if(letter.keyCode == '39'){
+
+			if(defaultRacketPoss + racketSize + 40 >= rightWall){
+				defaultRacketPoss = rightWall - racketSize;
+
+				if(!gameStart){
+					defaultBallPossLeft   = defaultRacketPoss + (racketSize / 2) - (ballSize / 2);
+					defaultBallPossRight  = defaultRacketPoss + (racketSize / 2) + (ballSize / 2);
+				}				
+			}
+			else{
+
+				defaultRacketPoss += 40;
+
+				if(!gameStart){
+					defaultBallPossLeft  += 40;
+					defaultBallPossRight += 40;
+				}
+			} 
+				
+			updateRacketPosition();	
+			document.getElementById("racket").style.left = defaultRacketPoss   + "px";
+			document.getElementById("ball").style.left 	 = defaultBallPossLeft + "px";
+		}
+		else if(letter.keyCode == '32')
+			gameStart = true;
+
+	}
+
+	function updateRacketPosition(){
+
+		racketLeftWall    = defaultRacketPoss;
+		racketRightWall   = defaultRacketPoss + racketSize;	
+	}
+
+	function updatesAfterBrekingBrick(id, bricksCoordinate, points){
+
+		bricksCoordinate[i][3] = false;
+		document.getElementById("brick" + id).style.display = "none";
+		points += 10;
+		document.getElementById("point").innerHTML = points;
+		return points;
+	}
+
+	function collision(){
+
+		var gameFinished = true;
+		//Collision Vertical Check
+		if(defaultBallPossTop <= topWall)
+			verMovement = 1;
+
+		else if(defaultBallPossTop >= racketTopWall && defaultBallPossLeft >= racketLeftWall - (ballSize - 2) && defaultBallPossLeft <= 	racketRightWall + (ballSize - 2))
+				verMovement = -1;
+
+		else if(defaultBallPossTop >= bottomWall && defaultBallPossLeft < racketLeftWall - (ballSize - 2) ||
+				defaultBallPossTop >= bottomWall && defaultBallPossLeft > racketRightWall + (ballSize - 2))
+				return "ballFalled";
+
+
+
+		//Collision Horizontal Check	
+		if(defaultBallPossLeft <= leftWall)
+			horMovement =  1;
+
+		else if(defaultBallPossLeft >= rightWall - ballSize)
+			horMovement = -1;	
+
+		else if(defaultBallPossLeft == racketRightWall && defaultBallPossTop > racketTopWall)
+			horMovement =  1;
+
+		else if(defaultBallPossLeft + ballSize == racketLeftWall && defaultBallPossTop > racketTopWall)
+			horMovement = -1;
+		
+
+
+		for(i=0; i<bricksCoordinate.length; i++){
+
+			id       	= bricksCoordinate[i][0];
+			leftPoss 	= Math.floor(bricksCoordinate[i][1]);
+			rightPoss   = leftPoss + 80;
+			topPoss  	= Math.floor(bricksCoordinate[i][2]);
+			bottomPoss  = topPoss  +  35;
+			displayStat = bricksCoordinate[i][3];
+
+			if(displayStat)
+				gameFinished = false;
+
+			if(defaultBallPossRight > leftPoss && defaultBallPossLeft < rightPoss && defaultBallPossTop == bottomPoss && displayStat){
+				
+				points = updatesAfterBrekingBrick(id, bricksCoordinate, points);				
+				verMovement =  1;
+			}
+			else if(defaultBallPossRight > leftPoss && defaultBallPossLeft < rightPoss && defaultBallPossBottom == topPoss && displayStat){
+				
+				points = updatesAfterBrekingBrick(id, bricksCoordinate, points);	
+				verMovement = -1;
+			}
+			else if(defaultBallPossBottom > topPoss && defaultBallPossTop < bottomPoss && Math.floor(defaultBallPossLeft) == Math.floor(rightPoss) && displayStat){
+				
+				points = updatesAfterBrekingBrick(id, bricksCoordinate, points);	
+				horMovement =  1;
+			}
+			else if(defaultBallPossBottom > topPoss && defaultBallPossTop < bottomPoss && Math.floor(defaultBallPossRight) == Math.floor(leftPoss) && displayStat){
+				
+				points = updatesAfterBrekingBrick(id, bricksCoordinate, points);
+				horMovement = -1;
+			}			
+		}
+
+		 if(gameFinished)
+			return "Finished";
+	}
+
+	/* * *
+	 * ResetDefaultPositions function resets the racket and ball 	
+	 * posiotions to the beggining place
+	 * * */
+	function resetDefaultPositions(){
+
+		defaultBallPossTop    = 499;
+		defaultBallPossLeft   = (browserWidth / 2) - (ballSize / 2);
+	    defaultBallPossBottom = defaultBallPossTop  + ballSize;
+		defaultBallPossRight  = defaultBallPossLeft + ballSize;
+
+		defaultRacketPoss = (browserWidth / 2) - (racketSize / 2);
+		racketTopWall     = 499;
+		racketLeftWall    = defaultRacketPoss;
+		racketRightWall   = defaultRacketPoss + racketSize;
+
+		document.getElementById("racket").style.left = defaultRacketPoss   + "px";
+		document.getElementById("ball").style.left   = defaultBallPossLeft + "px";
+		document.getElementById("ball").style.top    = defaultBallPossTop  + "px";			
+	}
+
+	setInterval(function(){
+
+				/* *
+				 * Collision Function returns true if the ball touch the bottomWall
+				 * Else keep changing the movement values without returning nothing!	
+				 * */
+				if(collision() == "ballFalled" && life == 0){
+
+					document.getElementById("life").innerHTML = life;	
+					alert("Game Over!\nYou achived " + points + " points.\n\nReload the page to start playing again.");
+					return;
+				}
+				else if(collision() == "Finished"){
+
+					alert("Congratulation!\nYou Completed The First Stage.\n\nReload the page to start playing again.");
+					return;
+				}
+				else if(collision() == "ballFalled" && life > 0){
+					life--;
+					document.getElementById("life").innerHTML = life;
+					resetDefaultPositions();
+					gameStart = false;
+				}
+
+				if(gameStart){
+					document.getElementById("ball").style.left = defaultBallPossLeft + "px";
+					document.getElementById("ball").style.top  = defaultBallPossTop  + "px";
+					defaultBallPossLeft   += horMovement;
+					defaultBallPossRight  += horMovement;
+					defaultBallPossTop 	  += verMovement;
+					defaultBallPossBottom += verMovement;	
+				}
+			}, 2); 
+
+
+</script>
+</html>
