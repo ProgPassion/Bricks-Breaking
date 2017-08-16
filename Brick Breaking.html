@@ -4,60 +4,60 @@
 	<title>Brick Breaking Ver 1.0</title>
 	<style type="text/css">
 		*{
-			 margin: 0;
-		    padding: 0;
+			margin: 0;
+		       padding: 0;
 		}
 		#background{
 			background-color: #765;
-				       width: 1100px;
-					  height: 450px;
-					  margin: 0px auto 30px auto;
+				   width: 1100px;
+				  height: 450px;
+			          margin: 0px auto 30px auto;
 		}
 		#racket{
 			background-color: #6699CC;
-					   width: 130px;
-					  height: 16px;
-					position: absolute;
-						 top: 514px;
-						left: calc((100% / 2) - 65px);
+			           width: 130px;
+			          height: 16px;
+				position: absolute;
+				     top: 514px;
+				    left: calc((100% / 2) - 65px);
 			   border-radius: 35%;
 		}
 		#ball{
 			background-color: yellow;
-				       width: 15px;
-					  height: 15px;
-					position: absolute;
-						 top: 499px;
-						left: calc((100% / 2) - 7.5px);
+				   width: 15px;
+		  		  height: 15px;
+				position: absolute;
+				     top: 499px;
+				    left: calc((100% / 2) - 7.5px);
 			   border-radius: 50%;
 		}
 		.bricks{
-					position: absolute;
-					   width: 78px;
-					  height: 33px;
+				position: absolute;
+				   width: 78px;
+				  height: 33px;
 			background-color: red;
-					  border: 1px solid brown;
+				  border: 1px solid brown;
 		}
 		.panel{
-					   width: 1160px;
-					  height: 28px;
-					 padding: 10px 10px;
-					  margin: 30px auto 0px auto;
-					  border: 1px solid white;
+				   width: 1160px;
+				  height: 28px;
+				 padding: 10px 10px;
+				  margin: 30px auto 0px auto;
+				  border: 1px solid white;
 			   border-radius: 20px;
 			background-color: #C76E32;
 		}
 		.pnt-part{
-				 float: left;
+			     float: left;
 			margin-top: 5px;
 		}
 		.lif-part{
-			 	   float: right;
+			       float: right;
 			  margin-top: 5px;
 			margin-right: 20px;
 		}
 		.input{
-				width: 1100px;
+		            width: 1100px;
 			   margin: 10px auto;
 			font-size: 20px;
 		}
@@ -94,7 +94,7 @@
 	var racketRightWall   = defaultRacketPoss + racketSize;
 
 	//Ball Default Values
-	var ballSize 		      = 15;
+	var ballSize 		  = 15;
 	var defaultBallPossTop    = 499;
 	var defaultBallPossLeft   = (browserWidth / 2) - (ballSize / 2);
 	var defaultBallPossBottom = defaultBallPossTop  + ballSize;
@@ -125,11 +125,8 @@
 	function bricksBuild(){
 
 		var value = document.getElementById("background").innerHTML;
-		
-		console.log(value);
 		var brickWidth = 80;
 		var brickHeight = 35;
-
 		idIndex = 1;
 		
 		for(i=0; i<10; i++){
@@ -203,7 +200,7 @@
 				
 			updateRacketPosition();	
 			document.getElementById("racket").style.left = defaultRacketPoss   + "px";
-			document.getElementById("ball").style.left 	 = defaultBallPossLeft + "px";
+			document.getElementById("ball").style.left   = defaultBallPossLeft + "px";
 		}
 		else if(letter.keyCode == '32')
 			gameStart = true;
@@ -258,10 +255,10 @@
 
 		for(i=0; i<bricksCoordinate.length; i++){
 
-			id       	= bricksCoordinate[i][0];
-			leftPoss 	= Math.floor(bricksCoordinate[i][1]);
+			id          = bricksCoordinate[i][0];
+			leftPoss    = Math.floor(bricksCoordinate[i][1]);
 			rightPoss   = leftPoss + 80;
-			topPoss  	= Math.floor(bricksCoordinate[i][2]);
+			topPoss     = Math.floor(bricksCoordinate[i][2]);
 			bottomPoss  = topPoss  +  35;
 			displayStat = bricksCoordinate[i][3];
 
@@ -302,7 +299,7 @@
 
 		defaultBallPossTop    = 499;
 		defaultBallPossLeft   = (browserWidth / 2) - (ballSize / 2);
-	    defaultBallPossBottom = defaultBallPossTop  + ballSize;
+	        defaultBallPossBottom = defaultBallPossTop  + ballSize;
 		defaultBallPossRight  = defaultBallPossLeft + ballSize;
 
 		defaultRacketPoss = (browserWidth / 2) - (racketSize / 2);
@@ -344,7 +341,7 @@
 					document.getElementById("ball").style.top  = defaultBallPossTop  + "px";
 					defaultBallPossLeft   += horMovement;
 					defaultBallPossRight  += horMovement;
-					defaultBallPossTop 	  += verMovement;
+					defaultBallPossTop    += verMovement;
 					defaultBallPossBottom += verMovement;	
 				}
 			}, 2); 
