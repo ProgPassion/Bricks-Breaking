@@ -213,7 +213,7 @@
 		racketRightWall   = defaultRacketPoss + racketSize;	
 	}
 
-	function updatesAfterBrekingBrick(id, bricksCoordinate, points){
+	function updatesAfterBrekingBrick(id, points){
 
 		bricksCoordinate[i][3] = false;
 		document.getElementById("brick" + id).style.display = "none";
@@ -267,22 +267,22 @@
 
 			if(defaultBallPossRight > leftPoss && defaultBallPossLeft < rightPoss && defaultBallPossTop == bottomPoss && displayStat){
 				
-				points = updatesAfterBrekingBrick(id, bricksCoordinate, points);				
+				points = updatesAfterBrekingBrick(id, points);				
 				verMovement =  1;
 			}
 			else if(defaultBallPossRight > leftPoss && defaultBallPossLeft < rightPoss && defaultBallPossBottom == topPoss && displayStat){
 				
-				points = updatesAfterBrekingBrick(id, bricksCoordinate, points);	
+				points = updatesAfterBrekingBrick(id, points);	
 				verMovement = -1;
 			}
 			else if(defaultBallPossBottom > topPoss && defaultBallPossTop < bottomPoss && Math.floor(defaultBallPossLeft) == Math.floor(rightPoss) && displayStat){
 				
-				points = updatesAfterBrekingBrick(id, bricksCoordinate, points);	
+				points = updatesAfterBrekingBrick(id, points);	
 				horMovement =  1;
 			}
 			else if(defaultBallPossBottom > topPoss && defaultBallPossTop < bottomPoss && Math.floor(defaultBallPossRight) == Math.floor(leftPoss) && displayStat){
 				
-				points = updatesAfterBrekingBrick(id, bricksCoordinate, points);
+				points = updatesAfterBrekingBrick(id, points);
 				horMovement = -1;
 			}			
 		}
@@ -312,7 +312,7 @@
 		document.getElementById("ball").style.top    = defaultBallPossTop  + "px";			
 	}
 
-	setInterval(function(){
+	var gamePlay = setInterval(function(){
 
 				/* *
 				 * Collision Function returns true if the ball touch the bottomWall
@@ -322,14 +322,19 @@
 
 					document.getElementById("life").innerHTML = life;	
 					alert("Game Over!\nYou achived " + points + " points.\n\nReload the page to start playing again.");
+					clearInterval(gamePlay);
+					window.location = self.location;
 					return;
 				}
 				else if(collision() == "Finished"){
 
 					alert("Congratulation!\nYou Completed The First Stage.\n\nReload the page to start playing again.");
+					clearInterval(gamePlay);
+					window.location = self.location;					
 					return;
 				}
 				else if(collision() == "ballFalled" && life > 0){
+
 					life--;
 					document.getElementById("life").innerHTML = life;
 					resetDefaultPositions();
@@ -337,6 +342,7 @@
 				}
 
 				if(gameStart){
+
 					document.getElementById("ball").style.left = defaultBallPossLeft + "px";
 					document.getElementById("ball").style.top  = defaultBallPossTop  + "px";
 					defaultBallPossLeft   += horMovement;
@@ -345,7 +351,5 @@
 					defaultBallPossBottom += verMovement;	
 				}
 			}, 2); 
-
-
 </script>
 </html>
